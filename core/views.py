@@ -7,4 +7,3 @@ def health_check(request):
         "detail": "ok",
         "result": "working"
     })
-# Create your views here.

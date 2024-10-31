@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = os.getenv('ROOT_URLCONF')
+ROOT_URLCONF = 'quiz_backend.urls'
 
 TEMPLATES = [
     {
@@ -70,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = os.getenv('WSGI_APPLICATION')
+WSGI_APPLICATION = 'quiz_backend.wsgi.application'
 
 
 # Database
@@ -78,8 +79,8 @@ WSGI_APPLICATION = os.getenv('WSGI_APPLICATION')
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DATABASE_ENGINE', "django.db.backends.sqlite3"),
-        'NAME': BASE_DIR / os.getenv('DATABASE_NAME', "db.sqlite3"),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -106,21 +107,21 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = os.getenv('LANGUAGE_CODE')
+LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = os.getenv('TIME_ZONE')
+TIME_ZONE = 'UTC'
 
-USE_I18N = os.getenv('USE_I18N') == 'True'
+USE_I18N = True
 
-USE_TZ = os.getenv('USE_TZ') == 'True'
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = os.getenv('STATIC_URL')
+STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = os.getenv('DEFAULT_AUTO_FIELD')
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
