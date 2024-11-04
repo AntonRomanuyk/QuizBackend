@@ -1,0 +1,14 @@
+version: '4.35'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh start.sh
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    environment:
+      - DEBUG=True
