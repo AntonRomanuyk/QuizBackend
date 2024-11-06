@@ -11,23 +11,36 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DEBUG=True
+      DEBUG: "${DEBUG}"
     depends_on:
       - db
       - redis
+    networks:
+      - backend_network
 
   db:
     image: postgres:17.0
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: "${DATABASE_NAME}"
+      POSTGRES_USER: "${DATABASE_USER}"
+      POSTGRES_PASSWORD: "${DATABASE_PASSWORD}"
     ports:
       - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+        - backend_network
 
   redis:
     image: redis:latest
+    volumes:
+      - redis_data:/data
+    networks:
+        - backend_network
 
 volumes:
   postgres_data:
   redis_data:
+
+networks:
+  backend_network:
