@@ -13,3 +13,7 @@ To launch this app using docker:
 Run this command 'docker-compose up --build'
 This will launch the Django development server at http://127.0.0.1:8000/.
 You can access your application in your web browser.
+
+To set up and run migrations run this commands:
+'python manage.py makemigrations' to make migrations,
+'python manage.py migrate' to apply migrations.
