@@ -1,14 +1,15 @@
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.response import Response
-from rest_framework import status
+
 from .models import User
-from .serializers import UserSerializer, UserListSerializer
+from .serializers import UserListSerializer
+from .serializers import UserSerializer
 
 
 # Create your views here.
 class UserPagination(PageNumberPagination):
     page_size = 10
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -16,6 +17,6 @@ class UserViewSet(viewsets.ModelViewSet):
     pagination_class = UserPagination
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action == "list":
             return UserListSerializer
         return UserSerializer
