@@ -1,0 +1,64 @@
+name: Django CI
+
+on:
+  push: {}
+  pull_request: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17.0
+        env:
+          POSTGRES_DB: "${{ secrets.DATABASE_NAME }}"
+          POSTGRES_USER: "${{ secrets.DATABASE_USER }}"
+          POSTGRES_PASSWORD: "${{ secrets.DATABASE_PASSWORD }}"
+        ports:
+          - "5432:5432"
+
+
+    env:
+      DJANGO_SETTINGS_MODULE: quiz_backend.settings
+      DATABASE_ENGINE: django.db.backends.postgresql
+      DATABASE_NAME: "${{ secrets.DATABASE_NAME }}"
+      DATABASE_USER: "${{ secrets.DATABASE_USER }}"
+      DATABASE_PASSWORD: "${{ secrets.DATABASE_PASSWORD }}"
+      DATABASE_HOST: "db"
+      DATABASE_PORT: "5432"
+      SECRET_KEY: "${{ secrets.SECRET_KEY }}"
+      DEBUG: 0
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run migrations
+        run: |
+          python manage.py makemigrations
+          python manage.py migrate
+
+      - name: Run linter (Ruff)
+        run: ruff check .
+
+      - name: Run tests
+        run: python manage.py test
+
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
