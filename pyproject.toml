@@ -1,0 +1,27 @@
+[tool.ruff]
+line-length = 120
+select = ["E", "F", "W", "C", "I", "B", "UP"]
+exclude = ["__pycache__",
+    "migrations",
+    ".venv",
+    "env",
+    "venv",
+    "ENV",
+    ".env",
+    ".idea",
+    ".vscode",
+    "*.egg-info",
+    "dist",
+    "build",
+    ".pytest_cache",
+    ".mypy_cache",
+    "htmlcov",
+    "site",
+    "node_modules",
+    "*.log",
+    "*.pot",
+    "*.bak",]
+
+[tool.ruff.isort]
+combine-as-imports = true
+force-single-line = true
