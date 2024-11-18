@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
+      db:
         image: postgres:17.0
         env:
           POSTGRES_DB: "${{ secrets.DATABASE_NAME }}"
@@ -18,17 +18,6 @@ jobs:
         ports:
           - "5432:5432"
 
-
-    env:
-      DJANGO_SETTINGS_MODULE: quiz_backend.settings
-      DATABASE_ENGINE: django.db.backends.postgresql
-      DATABASE_NAME: "${{ secrets.DATABASE_NAME }}"
-      DATABASE_USER: "${{ secrets.DATABASE_USER }}"
-      DATABASE_PASSWORD: "${{ secrets.DATABASE_PASSWORD }}"
-      DATABASE_HOST: "db"
-      DATABASE_PORT: "5432"
-      SECRET_KEY: "${{ secrets.SECRET_KEY }}"
-      DEBUG: 0
 
     steps:
       - name: Checkout code
@@ -44,7 +33,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -p 5432; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
+
       - name: Run migrations
+        env:
+          DJANGO_SETTINGS_MODULE: quiz_backend.settings
+          DATABASE_ENGINE: django.db.backends.postgresql
+          DATABASE_NAME: "${{ secrets.DATABASE_NAME }}"
+          DATABASE_USER: "${{ secrets.DATABASE_USER }}"
+          DATABASE_PASSWORD: "${{ secrets.DATABASE_PASSWORD }}"
+          DATABASE_HOST: "${{ secrets.DATABASE_HOST }}"
+          DATABASE_PORT: "${{ secrets.DATABASE_PORT }}"
+          SECRET_KEY: "${{ secrets.SECRET_KEY }}"
+          DEBUG: 1
         run: |
           python manage.py makemigrations
           python manage.py migrate
