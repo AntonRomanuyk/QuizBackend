@@ -18,6 +18,11 @@ jobs:
         ports:
           - "5432:5432"
 
+      redis:
+        image: redis:latest
+        ports:
+          - "6379:6379"
+
 
     steps:
       - name: Checkout code
@@ -84,6 +89,9 @@ jobs:
           DATABASE_PORT: "${{ secrets.DATABASE_PORT }}"
           SECRET_KEY: "${{ secrets.SECRET_KEY }}"
           DEBUG: 1
+          REDIS_HOST: "${{ secrets.REDIS_HOST }}"
+          REDIS_PORT: "${{ secrets.REDIS_PORT }}"
+          CACHES_ENGINE: "${{ secrets.CACHES_ENGINE }}"
         run: python manage.py test
 
       - name: Cache pip
