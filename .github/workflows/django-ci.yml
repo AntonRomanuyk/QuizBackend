@@ -68,6 +68,7 @@ jobs:
             echo "No duplicate migrations detected."
           else
             echo "Warning: Potential duplicate migrations detected. Please review."
+          fi
 
       - name: Run linter (Ruff)
         run: ruff check .
