@@ -5,7 +5,7 @@ on:
   pull_request: {}
 
 jobs:
-  test:
+  QuizBackendCI:
     runs-on: ubuntu-latest
 
     services:

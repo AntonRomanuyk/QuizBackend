@@ -1,6 +1,5 @@
 [tool.ruff]
 line-length = 120
-select = ["E", "F", "W", "C", "I", "B", "UP"]
 exclude = ["__pycache__",
     "migrations",
     ".venv",
@@ -22,6 +21,9 @@ exclude = ["__pycache__",
     "*.pot",
     "*.bak",]
 
-[tool.ruff.isort]
+[tool.ruff.lint]
+select = ["E", "F", "W", "C", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
 combine-as-imports = true
 force-single-line = true
