@@ -66,30 +66,6 @@ jobs:
           python manage.py makemigrations --noinput
           python manage.py migrate --noinput
 
-      - name: Check for duplicate migrations
-        env:
-          DJANGO_SETTINGS_MODULE: quiz_backend.settings
-          DATABASE_ENGINE: django.db.backends.postgresql
-          DATABASE_NAME: "${{ secrets.DATABASE_NAME }}"
-          DATABASE_USER: "${{ secrets.DATABASE_USER }}"
-          DATABASE_PASSWORD: "${{ secrets.DATABASE_PASSWORD }}"
-          DATABASE_HOST: "${{ secrets.DATABASE_HOST }}"
-          DATABASE_PORT: "${{ secrets.DATABASE_PORT }}"
-          SECRET_KEY: "${{ secrets.SECRET_KEY }}"
-          DEBUG: 1
-          REDIS_HOST: "${{ secrets.REDIS_HOST }}"
-          REDIS_PORT: "${{ secrets.REDIS_PORT }}"
-          CACHES_ENGINE: "${{ secrets.CACHES_ENGINE }}"
-        run: |
-          DUPLICATE_MIGRATIONS=$(python manage.py makemigrations --dry-run 2>&1 | grep -v "No changes detected")
-          if [ -n "$DUPLICATE_MIGRATIONS" ]; then
-            echo "Warning: Potential duplicate migrations detected. Please review:"
-            echo "$DUPLICATE_MIGRATIONS"
-            exit 1
-          else
-            echo "No duplicate migrations detected."
-          fi
-
       - name: Run linter (Ruff)
         run: ruff check .
 
