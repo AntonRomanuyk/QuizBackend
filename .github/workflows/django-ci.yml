@@ -56,6 +56,9 @@ jobs:
           DATABASE_PORT: "${{ secrets.DATABASE_PORT }}"
           SECRET_KEY: "${{ secrets.SECRET_KEY }}"
           DEBUG: 1
+          REDIS_HOST: "${{ secrets.REDIS_HOST }}"
+          REDIS_PORT: "${{ secrets.REDIS_PORT }}"
+          CACHES_ENGINE: "${{ secrets.CACHES_ENGINE }}"
         run: |
           python manage.py makemigrations --noinput || true
           UNAPPLIED_MIGRATIONS=$(python manage.py showmigrations --plan | grep '\[ \]' | awk '{print $2}')
