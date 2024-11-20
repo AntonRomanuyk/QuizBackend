@@ -60,22 +60,18 @@ jobs:
           REDIS_PORT: "${{ secrets.REDIS_PORT }}"
           CACHES_ENGINE: "${{ secrets.CACHES_ENGINE }}"
         run: |
-          python manage.py makemigrations --noinput || true
-          UNAPPLIED_MIGRATIONS=$(python manage.py showmigrations --plan | grep '\[ \]' | awk '{print $2}')
-          if [ -n "$UNAPPLIED_MIGRATIONS" ]; then
-            for migration in $UNAPPLIED_MIGRATIONS; do
-              python manage.py migrate $migration --fake-initial --noinput
-            done
-          else
-            echo "No unapplied migrations."
-          fi
+          python manage.py makemigrations --noinput
+          python manage.py migrate --noinput
 
       - name: Check for duplicate migrations
         run: |
-          if python manage.py makemigrations --dry-run | grep "No changes detected"; then
-            echo "No duplicate migrations detected."
+          DUPLICATE_MIGRATIONS=$(python manage.py makemigrations --dry-run 2>&1 | grep -v "No changes detected")
+          if [ -n "$DUPLICATE_MIGRATIONS" ]; then
+            echo "Warning: Potential duplicate migrations detected. Please review:"
+            echo "$DUPLICATE_MIGRATIONS"
+            exit 1
           else
-            echo "Warning: Potential duplicate migrations detected. Please review."
+            echo "No duplicate migrations detected."
           fi
 
       - name: Run linter (Ruff)
