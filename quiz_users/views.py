@@ -20,3 +20,5 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return UserListSerializer
         return UserSerializer
+
+
