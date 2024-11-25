@@ -17,3 +17,7 @@ You can access your application in your web browser.
 To set up and run migrations run this commands:
 'python manage.py makemigrations' to make migrations,
 'python manage.py migrate' to apply migrations.
+
+To set up translations run this commands:
+'django-admin compilemessages'
+This command will create .mo files for English to Ukrainian translation.
