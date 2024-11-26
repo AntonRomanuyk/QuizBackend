@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "core.apps.CoreConfig",
     "quiz_users.apps.QuizUsersConfig",
+    "companies.apps.CompaniesConfig",
     "djoser",
     "rest_framework",
 ]
