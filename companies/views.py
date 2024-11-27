@@ -11,9 +11,19 @@ from companies.serializers import CompanySerializer
 
 
 # Create your views here.
+class IsOwnerOrReadOnly(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        if obj.owner == request.user:
+            return True
+        return False
+
+
 class CompanyViewSet(viewsets.ModelViewSet):
     queryset = Company.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def get_queryset(self):
         try:
@@ -38,28 +48,4 @@ class CompanyViewSet(viewsets.ModelViewSet):
             serializer.save(owner=self.request.user)
         except Exception as e:
             error_message = _("Failed to create company: %s") % str(e)
-            return Response({"error": error_message}, status=status.HTTP_400_BAD_REQUEST)
-
-    def perform_update(self, serializer):
-        try:
-            if self.get_object().owner != self.request.user:
-                error_message = _("You can only edit your own companies.")
-                raise PermissionDenied(error_message)
-            serializer.save()
-        except PermissionDenied as e:
-            raise e
-        except Exception as e:
-            error_message = _("Failed to update company: %s") % str(e)
-            return Response({"error": error_message}, status=status.HTTP_400_BAD_REQUEST)
-
-    def perform_destroy(self, instance):
-        try:
-            if instance.owner != self.request.user:
-                error_message = _("You can only delete your own companies.")
-                raise PermissionDenied(error_message)
-            instance.delete()
-        except PermissionDenied as e:
-            raise e
-        except Exception as e:
-            error_message = _("Failed to delete company: %s") % str(e)
             return Response({"error": error_message}, status=status.HTTP_400_BAD_REQUEST)
