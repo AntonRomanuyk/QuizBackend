@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-25 05:33+0200\n"
+"POT-Creation-Date: 2024-11-26 04:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,36 +17,36 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-#: .\quiz_users\views.py:30
+
+#: .\companies\views.py:20
 #, python-format
-msgid "Failed to list users: %s"
+msgid "Failed to retrieve the company list: %s"
 msgstr ""
 
-#: .\quiz_users\views.py:37 .\quiz_users\views.py:67
-msgid "User not found."
+#: .\companies\views.py:29
+#, python-format
+msgid "Failed to determine serializer: %s"
 msgstr ""
 
-#: .\quiz_users\views.py:40
+#: .\companies\views.py:36
 #, python-format
-msgid "Failed to retrieve user: %s"
+msgid "Failed to create company: %s"
 msgstr ""
 
-#: .\quiz_users\views.py:47 .\quiz_users\views.py:57
-#, python-format
-msgid "Invalid data: %s"
+#: .\companies\views.py:42
+msgid "You can only edit your own companies."
 msgstr ""
 
-#: .\quiz_users\views.py:50
+#: .\companies\views.py:48
 #, python-format
-msgid "Failed to create user: %s"
+msgid "Failed to update company: %s"
 msgstr ""
 
-#: .\quiz_users\views.py:60
-#, python-format
-msgid "Failed to update user: %s"
+#: .\companies\views.py:54
+msgid "You can only delete your own companies."
 msgstr ""
 
-#: .\quiz_users\views.py:70
+#: .\companies\views.py:60
 #, python-format
-msgid "Failed to delete user: %s"
+msgid "Failed to delete company: %s"
 msgstr ""
