@@ -6,19 +6,12 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from companies.models import Company
+from companies.permissions import IsOwnerOrReadOnly
 from companies.serializers import CompanyListSerializer
 from companies.serializers import CompanySerializer
 
-
 # Create your views here.
-class IsOwnerOrReadOnly(permissions.BasePermission):
 
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        if obj.owner == request.user:
-            return True
-        return False
 
 
 class CompanyViewSet(viewsets.ModelViewSet):
