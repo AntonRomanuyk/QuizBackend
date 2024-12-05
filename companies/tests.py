@@ -33,7 +33,7 @@ class CompanyViewSetTestCase(APITestCase):
     def test_get_company_list(self):
         response = self.client.get(reverse('company-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)  # Потому что в 'setUp' мы создаем компанию
+        self.assertEqual(len(response.data), 1)
 
     def test_view_company_members(self):
         url = reverse('company-members', kwargs={'pk': self.company.pk})
@@ -69,19 +69,14 @@ class CompanyInvitationViewSetTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_sent_invitations(self):
-        CompanyInvitation.objects.create(
-            company=self.company,
-            user=self.non_member,
-            status=InvitationStatus.PENDING.name
-        )
+    def test_send_invitation(self):
         self.client.force_authenticate(user=self.user)
-        url = reverse('company-invitations-sent', kwargs={'pk': self.company.pk})
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-
+        url = reverse('company-invitations-send-invitation')
+        data = {'company_id': self.company.id, 'user_id': self.non_member.id}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        invitation_exists = CompanyInvitation.objects.filter(company=self.company, user=self.non_member).exists()
+        self.assertTrue(invitation_exists)
 
     def test_accept_invitation(self):
         invitation = CompanyInvitation.objects.create(
