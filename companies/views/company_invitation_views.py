@@ -90,7 +90,8 @@ class CompanyInvitationViewSet(viewsets.ModelViewSet):
         if invitation.status != InvitationStatus.PENDING.name:
             return Response({"error": _("Only pending invitations can be accepted.")},
                             status=status.HTTP_400_BAD_REQUEST)
-
+        print(request.user)
+        print(":accept user124")
         invitation.company.members.add(request.user)
         invitation.status = InvitationStatus.ACCEPTED.name
         invitation.save()

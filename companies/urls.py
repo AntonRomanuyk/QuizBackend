@@ -2,9 +2,9 @@ from django.urls import include
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from companies.company_invitation_views import CompanyInvitationViewSet
-from companies.company_request_views import CompanyRequestViewSet
-from companies.views import CompanyViewSet
+from companies.views.company_invitation_views import CompanyInvitationViewSet
+from companies.views.company_request_views import CompanyRequestViewSet
+from companies.views.views import CompanyViewSet
 
 router = DefaultRouter()
 router.register(r'companies', CompanyViewSet, basename='company')

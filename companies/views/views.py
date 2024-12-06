@@ -88,13 +88,11 @@ class CompanyViewSet(viewsets.ModelViewSet):
     )
     def leave_company(self, request, pk=None):
         company = self.get_object()
-
-        if company.owner == request.user:
-            return Response({"error": _("Owner cannot leave the company.")},
-                            status=status.HTTP_400_BAD_REQUEST)
-        else:
-            company.members.remove(request.user)
-            response = {"status": _("You have left the company.")}
+        print(f"{company.pk} : company.pk")
+        print(f"{company.members.all()} : company.members.all")
+        print(f"{request.user} : request.user")
+        company.members.remove(request.user)
+        response = {"status": _("You have left the company.")}
 
         return Response(response, status=status.HTTP_200_OK)
 
