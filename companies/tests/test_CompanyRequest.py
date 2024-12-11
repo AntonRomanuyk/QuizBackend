@@ -64,3 +64,36 @@ class CompanyRequestViewSetTestCase(APITestCase):
         company_request.refresh_from_db()
         self.assertEqual(company_request.status, RequestStatus.CANCELED.name)
         self.client.force_authenticate(user=None)
+
+    def test_approve_request(self):
+        company_request = CompanyRequest.objects.create(company=self.company, user=self.another_user,
+                                                        status=RequestStatus.PENDING.name)
+        self.client.force_authenticate(user=self.user)
+        url = reverse('company-requests-approve', kwargs={'pk': company_request.pk})
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        company_request.refresh_from_db()
+        self.assertEqual(company_request.status, RequestStatus.APPROVED.name)
+        self.assertIn(self.another_user, self.company.members.all())
+        self.client.force_authenticate(user=None)
+
+    def test_reject_request(self):
+        company_request = CompanyRequest.objects.create(company=self.company, user=self.another_user,
+                                                        status=RequestStatus.PENDING.name)
+        self.client.force_authenticate(user=self.user)
+        url = reverse('company-requests-reject', kwargs={'pk': company_request.pk})
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        company_request.refresh_from_db()
+        self.assertEqual(company_request.status, RequestStatus.REJECTED.name)
+        self.client.force_authenticate(user=None)
+
+    def test_send_request_with_existing_pending_request(self):
+        CompanyRequest.objects.create(company=self.company, user=self.another_user, status=RequestStatus.PENDING.name)
+        self.client.force_authenticate(user=self.another_user)
+        url = reverse('company-requests-send-request')
+        data = {'company_id': self.company.id}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("You already have a pending request for this company.", response.data['error'])
+        self.client.force_authenticate(user=None)

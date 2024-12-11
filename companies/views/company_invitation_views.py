@@ -22,9 +22,6 @@ class CompanyInvitationViewSet(viewsets.ModelViewSet):
     serializer_class = CompanyInvitationSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
-
     def get_serializer_class(self):
         try:
             if self.action == "list":
@@ -42,7 +39,7 @@ class CompanyInvitationViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated, IsOwnerOrReadOnly])
     def sent(self, request, pk=None):
-        company = self.get_object().company
+        company = Company.objects.get(pk=pk)
         invitations = CompanyInvitation.objects.filter(company=company)
         serializer = self.get_serializer(invitations, many=True)
         return Response(serializer.data)
@@ -90,8 +87,6 @@ class CompanyInvitationViewSet(viewsets.ModelViewSet):
         if invitation.status != InvitationStatus.PENDING.name:
             return Response({"error": _("Only pending invitations can be accepted.")},
                             status=status.HTTP_400_BAD_REQUEST)
-        print(request.user)
-        print(":accept user124")
         invitation.company.members.add(request.user)
         invitation.status = InvitationStatus.ACCEPTED.name
         invitation.save()

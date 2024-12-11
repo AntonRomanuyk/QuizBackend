@@ -38,6 +38,7 @@ class CompanyViewSetTestCase(APITestCase):
         self.client.force_authenticate(user=None)
 
     def test_view_company_members(self):
+        self.client = APIClient()
         self.client.force_authenticate(user=self.user)
         url = reverse('company-members', kwargs={'pk': self.company.pk})
         response = self.client.get(url)
@@ -72,4 +73,13 @@ class CompanyViewSetTestCase(APITestCase):
         url = reverse('company-leave-company', kwargs={'pk': self.company.pk})
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.client.force_authenticate(user=None)
+
+    def test_leave_company(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.another_user)
+        url = reverse('company-leave-company', kwargs={'pk': self.company.pk})
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotIn(self.another_user, self.company.members.all())
         self.client.force_authenticate(user=None)

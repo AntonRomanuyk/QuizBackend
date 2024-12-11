@@ -22,8 +22,6 @@ class CompanyRequestViewSet(viewsets.ModelViewSet):
     serializer_class = CompanyRequestSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
 
     def get_serializer_class(self):
         try:

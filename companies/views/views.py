@@ -25,7 +25,7 @@ class CompanyViewSet(viewsets.ModelViewSet):
         try:
             if self.action in ['list', 'retrieve']:
                 return self.queryset.filter(is_visible=True)
-            return self.queryset.filter(owner=self.request.user)
+            return self.queryset
         except Exception as e:
             error_message = _("Failed to retrieve the company list: %s") % str(e)
             raise PermissionDenied(error_message) from e
@@ -88,9 +88,9 @@ class CompanyViewSet(viewsets.ModelViewSet):
     )
     def leave_company(self, request, pk=None):
         company = self.get_object()
-        print(f"{company.pk} : company.pk")
-        print(f"{company.members.all()} : company.members.all")
-        print(f"{request.user} : request.user")
+        if request.user == company.owner:
+            return Response({"error": _("You cannot remove the owner from the company.")},
+                            status=status.HTTP_403_FORBIDDEN)
         company.members.remove(request.user)
         response = {"status": _("You have left the company.")}
 

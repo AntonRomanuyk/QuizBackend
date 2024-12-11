@@ -31,6 +31,18 @@ class CompanyInvitationViewSetTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.force_authenticate(user=None)
 
+    def test_sent_invitations(self):
+        invitation = CompanyInvitation.objects.create(
+            company=self.company,
+            user=self.non_member,
+            status=InvitationStatus.PENDING.name
+        )
+        self.client.force_authenticate(user=self.user)
+        url = reverse('company-invitations-sent', kwargs={'pk': self.company.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn(invitation.id, [inv['id'] for inv in response.data])
+
     def test_send_invitation(self):
         self.client.force_authenticate(user=self.user)
         url = reverse('company-invitations-send-invitation')
@@ -99,6 +111,32 @@ class CompanyInvitationViewSetTestCase(APITestCase):
         url = reverse('company-invitations-revoke-invitation', kwargs={'pk': invitation.pk})
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.client.force_authenticate(user=None)
+
+    def test_revoke_pending_invitation(self):
+        invitation = CompanyInvitation.objects.create(
+            company=self.company,
+            user=self.non_member,
+            status=InvitationStatus.PENDING.name
+        )
+        self.client.force_authenticate(user=self.user)
+        url = reverse('company-invitations-revoke-invitation', kwargs={'pk': invitation.pk})
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        invitation.refresh_from_db()
+        self.assertEqual(invitation.status, InvitationStatus.REVOKED.name)
+        self.client.force_authenticate(user=None)
+
+    def test_revoke_non_pending_invitation(self):
+        invitation = CompanyInvitation.objects.create(
+            company=self.company,
+            user=self.non_member,
+            status=InvitationStatus.ACCEPTED.name
+        )
+        self.client.force_authenticate(user=self.user)
+        url = reverse('company-invitations-revoke-invitation', kwargs={'pk': invitation.pk})
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.client.force_authenticate(user=None)
 
     def test_decline_invitation(self):
