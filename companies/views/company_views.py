@@ -10,9 +10,10 @@ from companies.filters import CompanyFilter
 from companies.models import Company
 from companies.permissions import IsCompanyMember
 from companies.permissions import IsOwnerOrReadOnly
-from companies.serializers import CompanyListSerializer, UserSummarySerializer
+from companies.serializers import CompanyListSerializer
 from companies.serializers import CompanyRequestListSerializer
 from companies.serializers import CompanySerializer
+from companies.serializers import UserSummarySerializer
 
 # Create your views here.
 
