@@ -6,10 +6,11 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
+from companies.filters import CompanyFilter
 from companies.models import Company
 from companies.permissions import IsCompanyMember
 from companies.permissions import IsOwnerOrReadOnly
-from companies.serializers import CompanyListSerializer
+from companies.serializers import CompanyListSerializer, UserSummarySerializer
 from companies.serializers import CompanyRequestListSerializer
 from companies.serializers import CompanySerializer
 
@@ -20,6 +21,7 @@ from companies.serializers import CompanySerializer
 class CompanyViewSet(viewsets.ModelViewSet):
     queryset = Company.objects.all()
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    filterset_class = CompanyFilter
 
     def get_queryset(self):
         try:
@@ -96,3 +98,35 @@ class CompanyViewSet(viewsets.ModelViewSet):
 
         return Response(response, status=status.HTTP_200_OK)
 
+    @action(detail=True, methods=['post'])
+    def appoint_admin(self, request, pk=None):
+        company = self.get_object()
+        user_id = request.data.get('user_id')
+
+        try:
+            user = company.members.get(id=user_id)
+        except company.members.model.DoesNotExist:
+            return Response({"error": "User not in company members."}, status=status.HTTP_400_BAD_REQUEST)
+
+        company.admins.add(user)
+        return Response({"message": f"{user.username} is now an admin."}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def remove_admin(self, request, pk=None):
+        company = self.get_object()
+        user_id = request.data.get('user_id')
+
+        try:
+            user = company.admins.get(id=user_id)
+        except company.admins.model.DoesNotExist:
+            return Response({"error": "User is not an admin."}, status=status.HTTP_400_BAD_REQUEST)
+
+        company.admins.remove(user)
+        return Response({"message": f"{user.username} is no longer an admin."}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def list_admins(self, request, pk=None):
+        company = self.get_object()
+        admins = company.admins.all()
+        serializer = UserSummarySerializer(admins, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
