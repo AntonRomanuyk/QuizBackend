@@ -1,12 +1,10 @@
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from quiz_users.serializers import CompanyUserSerializer
+
 from .models import Company
 from .models import CompanyInvitation
 from .models import CompanyRequest
-
-
 
 
 class CompanySerializer(serializers.ModelSerializer):

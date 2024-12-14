@@ -15,7 +15,6 @@ from companies.serializers import CompanyRequestListSerializer
 from companies.serializers import CompanySerializer
 from quiz_users.serializers import CompanyUserSerializer
 
-
 # Create your views here.
 
 
