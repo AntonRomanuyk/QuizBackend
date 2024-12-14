@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-05 07:26+0200\n"
+"POT-Creation-Date: 2024-12-14 04:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,126 +21,146 @@ msgstr ""
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: .\companies\company_invitation_views.py:28
-#: .\companies\company_request_views.py:29 .\companies\views.py:37
+#: .\companies\views\company_invitation_views.py:31
+#: .\companies\views\company_request_views.py:32
+#: .\companies\views\company_views.py:43
 #, python-format
 msgid "Failed to determine serializer: %s"
 msgstr "Не вдалося визначити серіалізатор: %s"
 
-#: .\companies\company_invitation_views.py:50
+#: .\companies\views\company_invitation_views.py:53
 msgid "Company ID and User ID are required."
 msgstr "Необхідні ідентифікатори компанії та користувача."
 
-#: .\companies\company_invitation_views.py:55
+#: .\companies\views\company_invitation_views.py:58
 msgid "This user is already a member of the company."
 msgstr "Цей користувач вже є членом компанії."
 
-#: .\companies\company_invitation_views.py:59
+#: .\companies\views\company_invitation_views.py:63
 msgid "An invitation is already pending for this user."
 msgstr "Для цього користувача вже очікує запрошення."
 
-#: .\companies\company_invitation_views.py:63
+#: .\companies\views\company_invitation_views.py:67
 msgid "Invitation sent successfully."
 msgstr "Запрошення надіслано успішно."
 
-#: .\companies\company_invitation_views.py:70
+#: .\companies\views\company_invitation_views.py:74
 msgid "Only pending invitations can be revoked."
 msgstr "Можна відкликати лише очікуючі запрошення."
 
-#: .\companies\company_invitation_views.py:76
+#: .\companies\views\company_invitation_views.py:80
 msgid "Invitation revoked successfully."
 msgstr "Запрошення успішно відкликано."
 
-#: .\companies\company_invitation_views.py:83
+#: .\companies\views\company_invitation_views.py:88
 msgid "Only pending invitations can be accepted."
 msgstr "Можна прийняти лише очікуючі запрошення."
 
-#: .\companies\company_invitation_views.py:90
+#: .\companies\views\company_invitation_views.py:94
 msgid "Invitation accepted successfully."
 msgstr "Запрошення успішно прийнято."
 
-#: .\companies\company_invitation_views.py:97
+#: .\companies\views\company_invitation_views.py:101
 msgid "Only pending invitations can be declined."
 msgstr "Можна відхилити лише очікуючі запрошення."
 
-#: .\companies\company_invitation_views.py:103
+#: .\companies\views\company_invitation_views.py:107
 msgid "Invitation declined successfully."
 msgstr "Запрошення успішно відхилено."
 
-#: .\companies\company_request_views.py:43
-#: .\companies\company_request_views.py:56
+#: .\companies\views\company_request_views.py:46
+#: .\companies\views\company_request_views.py:59
 msgid "This request is not pending."
 msgstr "Цей запит не в очікуванні."
 
-#: .\companies\company_request_views.py:49
+#: .\companies\views\company_request_views.py:52
 msgid "The request has been approved."
 msgstr "Запит було схвалено."
 
-#: .\companies\company_request_views.py:61
+#: .\companies\views\company_request_views.py:64
 msgid "The request has been rejected."
 msgstr "Запит було відхилено."
 
-#: .\companies\company_request_views.py:67
+#: .\companies\views\company_request_views.py:71
 msgid "Company ID is required."
 msgstr "Необхідний ідентифікатор компанії."
 
-#: .\companies\company_request_views.py:72
+#: .\companies\views\company_request_views.py:76
 msgid "Company not found."
 msgstr "Компанію не знайдено."
 
-#: .\companies\company_request_views.py:75
+#: .\companies\views\company_request_views.py:80
 msgid "You already have a pending request for this company."
 msgstr "У вас вже є запит в очікуванні для цієї компанії."
 
-#: .\companies\company_request_views.py:79
+#: .\companies\views\company_request_views.py:84
 msgid "Request sent successfully."
 msgstr "Запит надіслано успішно."
 
-#: .\companies\company_request_views.py:87
+#: .\companies\views\company_request_views.py:92
 msgid "Only pending requests can be canceled."
 msgstr "Можна скасувати лише запити, що знаходяться в очікуванні."
 
-#: .\companies\company_request_views.py:92
+#: .\companies\views\company_request_views.py:97
 msgid "Request canceled successfully."
 msgstr "Запит успішно скасовано."
 
-#: .\companies\views.py:28
+#: .\companies\views\company_views.py:34
 #, python-format
 msgid "Failed to retrieve the company list: %s"
 msgstr "Не вдалося отримати список компаній: %s"
 
-#: .\companies\views.py:45
+#: .\companies\views\company_views.py:51
 #, python-format
 msgid "Failed to create company: %s"
 msgstr "Не вдалося створити компанію: %s"
 
-#: .\companies\views.py:66
+#: .\companies\views\company_views.py:72
 msgid "User ID is required."
 msgstr "Необхідний ідентифікатор користувача."
 
-#: .\companies\views.py:69
+#: .\companies\views\company_views.py:75
 msgid "User is not a member of this company."
 msgstr "Користувач не є членом цієї компанії."
 
-#: .\companies\views.py:74
+#: .\companies\views\company_views.py:80 .\companies\views\company_views.py:96
 #, fuzzy
 #| msgid "You can only delete your own companies."
 msgid "You cannot remove the owner from the company."
 msgstr "Ви не можете видалити власника з компанії."
 
-#: .\companies\views.py:79
+#: .\companies\views\company_views.py:85
 #, python-brace-format
 msgid "User {user.username} has been removed from the company."
 msgstr "Користувач {user.username} був видалений з компанії."
 
-#: .\companies\views.py:91
-msgid "Owner cannot leave the company."
-msgstr "Власник не може залишити компанію."
-
-#: .\companies\views.py:95
+#: .\companies\views\company_views.py:99
 msgid "You have left the company."
 msgstr "Ви покинули компанію."
 
+#: .\companies\views\company_views.py:111
+msgid "User not in company members."
+msgstr "Користувач не є членом компанії."
+
+#: .\companies\views\company_views.py:114
+#, python-brace-format
+msgid "{user.username} is now an admin."
+msgstr "{user.username} тепер є адміністратором."
+
+#: .\companies\views\company_views.py:124
+#, fuzzy
+#| msgid "User is not a member of this company."
+msgid "User is not an admin."
+msgstr "Користувач не є членом цієї компанії."
+
+#: .\companies\views\company_views.py:127
+#, fuzzy, python-brace-format
+#| msgid "User {user.username} has been removed from the company."
+msgid "{user.username} is no longer an admin."
+msgstr "Користувач {user.username} був видалений з компанії."
+
+#~ msgid "Owner cannot leave the company."
+#~ msgstr "Власник не може залишити компанію."
 
 #~ msgid "You can only edit your own companies."
 #~ msgstr "Ви можете редагувати лише власні компанії."

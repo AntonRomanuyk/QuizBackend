@@ -13,7 +13,8 @@ from companies.permissions import IsOwnerOrReadOnly
 from companies.serializers import CompanyListSerializer
 from companies.serializers import CompanyRequestListSerializer
 from companies.serializers import CompanySerializer
-from companies.serializers import UserSummarySerializer
+from quiz_users.serializers import CompanyUserSerializer
+
 
 # Create your views here.
 
@@ -107,10 +108,10 @@ class CompanyViewSet(viewsets.ModelViewSet):
         try:
             user = company.members.get(id=user_id)
         except company.members.model.DoesNotExist:
-            return Response({"error": "User not in company members."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": _("User not in company members.")}, status=status.HTTP_400_BAD_REQUEST)
 
         company.admins.add(user)
-        return Response({"message": f"{user.username} is now an admin."}, status=status.HTTP_200_OK)
+        return Response({"message": _(f"{user.username} is now an admin.")}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'])
     def remove_admin(self, request, pk=None):
@@ -120,14 +121,14 @@ class CompanyViewSet(viewsets.ModelViewSet):
         try:
             user = company.admins.get(id=user_id)
         except company.admins.model.DoesNotExist:
-            return Response({"error": "User is not an admin."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": _("User is not an admin.")}, status=status.HTTP_400_BAD_REQUEST)
 
         company.admins.remove(user)
-        return Response({"message": f"{user.username} is no longer an admin."}, status=status.HTTP_200_OK)
+        return Response({"message": _(f"{user.username} is no longer an admin.")}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def list_admins(self, request, pk=None):
         company = self.get_object()
-        admins = company.admins.all()
-        serializer = UserSummarySerializer(admins, many=True)
+        admins = company.admins.only('id', 'username')
+        serializer = CompanyUserSerializer(admins, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

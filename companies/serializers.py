@@ -1,19 +1,17 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from quiz_users.serializers import CompanyUserSerializer
 from .models import Company
 from .models import CompanyInvitation
 from .models import CompanyRequest
 
 
-class UserSummarySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = get_user_model()
-        fields = ['id', 'username']
+
 
 class CompanySerializer(serializers.ModelSerializer):
-    members = UserSummarySerializer(many=True, required=False)
-    admins = UserSummarySerializer(many=True, required=False)
+    members = CompanyUserSerializer(many=True, required=False)
+    admins = CompanyUserSerializer(many=True, required=False)
 
     class Meta:
         model = Company

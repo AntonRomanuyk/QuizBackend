@@ -22,7 +22,7 @@ class Company(TimeStampedModel):
     )
     admins = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        related_name="companies_admins"
+        related_name="company_admins"
     )
 
     class Meta:
