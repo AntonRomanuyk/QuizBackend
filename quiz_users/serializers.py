@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from .models import User
@@ -14,3 +15,8 @@ class UserListSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "username", "created_at"]
         ordering = ["created_at"]
+
+class CompanyUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ['id', 'username']

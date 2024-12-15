@@ -20,6 +20,10 @@ class Company(TimeStampedModel):
         settings.AUTH_USER_MODEL,
         related_name="companies_members",
     )
+    admins = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="company_admins"
+    )
 
     class Meta:
         verbose_name = "Company"

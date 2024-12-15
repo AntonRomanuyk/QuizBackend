@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-05 07:26+0200\n"
+"POT-Creation-Date: 2024-12-14 04:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,120 +18,135 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\companies\company_invitation_views.py:28
-#: .\companies\company_request_views.py:29 .\companies\views.py:37
+#: .\companies\views\company_invitation_views.py:31
+#: .\companies\views\company_request_views.py:32
+#: .\companies\views\company_views.py:43
 #, python-format
 msgid "Failed to determine serializer: %s"
 msgstr ""
 
-#: .\companies\company_invitation_views.py:50
+#: .\companies\views\company_invitation_views.py:53
 msgid "Company ID and User ID are required."
 msgstr ""
 
-#: .\companies\company_invitation_views.py:55
+#: .\companies\views\company_invitation_views.py:58
 msgid "This user is already a member of the company."
 msgstr ""
 
-#: .\companies\company_invitation_views.py:59
+#: .\companies\views\company_invitation_views.py:63
 msgid "An invitation is already pending for this user."
 msgstr ""
 
-#: .\companies\company_invitation_views.py:63
+#: .\companies\views\company_invitation_views.py:67
 msgid "Invitation sent successfully."
 msgstr ""
 
-#: .\companies\company_invitation_views.py:70
+#: .\companies\views\company_invitation_views.py:74
 msgid "Only pending invitations can be revoked."
 msgstr ""
 
-#: .\companies\company_invitation_views.py:76
+#: .\companies\views\company_invitation_views.py:80
 msgid "Invitation revoked successfully."
 msgstr ""
 
-#: .\companies\company_invitation_views.py:83
+#: .\companies\views\company_invitation_views.py:88
 msgid "Only pending invitations can be accepted."
 msgstr ""
 
-#: .\companies\company_invitation_views.py:90
+#: .\companies\views\company_invitation_views.py:94
 msgid "Invitation accepted successfully."
 msgstr ""
 
-#: .\companies\company_invitation_views.py:97
+#: .\companies\views\company_invitation_views.py:101
 msgid "Only pending invitations can be declined."
 msgstr ""
 
-#: .\companies\company_invitation_views.py:103
+#: .\companies\views\company_invitation_views.py:107
 msgid "Invitation declined successfully."
 msgstr ""
 
-#: .\companies\company_request_views.py:43
-#: .\companies\company_request_views.py:56
+#: .\companies\views\company_request_views.py:46
+#: .\companies\views\company_request_views.py:59
 msgid "This request is not pending."
 msgstr ""
 
-#: .\companies\company_request_views.py:49
+#: .\companies\views\company_request_views.py:52
 msgid "The request has been approved."
 msgstr ""
 
-#: .\companies\company_request_views.py:61
+#: .\companies\views\company_request_views.py:64
 msgid "The request has been rejected."
 msgstr ""
 
-#: .\companies\company_request_views.py:67
+#: .\companies\views\company_request_views.py:71
 msgid "Company ID is required."
 msgstr ""
 
-#: .\companies\company_request_views.py:72
+#: .\companies\views\company_request_views.py:76
 msgid "Company not found."
 msgstr ""
 
-#: .\companies\company_request_views.py:75
+#: .\companies\views\company_request_views.py:80
 msgid "You already have a pending request for this company."
 msgstr ""
 
-#: .\companies\company_request_views.py:79
+#: .\companies\views\company_request_views.py:84
 msgid "Request sent successfully."
 msgstr ""
 
-#: .\companies\company_request_views.py:87
+#: .\companies\views\company_request_views.py:92
 msgid "Only pending requests can be canceled."
 msgstr ""
 
-#: .\companies\company_request_views.py:92
+#: .\companies\views\company_request_views.py:97
 msgid "Request canceled successfully."
 msgstr ""
 
-#: .\companies\views.py:28
+#: .\companies\views\company_views.py:34
 #, python-format
 msgid "Failed to retrieve the company list: %s"
 msgstr ""
 
-#: .\companies\views.py:45
+#: .\companies\views\company_views.py:51
 #, python-format
 msgid "Failed to create company: %s"
 msgstr ""
 
-#: .\companies\views.py:66
+#: .\companies\views\company_views.py:72
 msgid "User ID is required."
 msgstr ""
 
-#: .\companies\views.py:69
+#: .\companies\views\company_views.py:75
 msgid "User is not a member of this company."
 msgstr ""
 
-#: .\companies\views.py:74
+#: .\companies\views\company_views.py:80 .\companies\views\company_views.py:96
 msgid "You cannot remove the owner from the company."
 msgstr ""
 
-#: .\companies\views.py:79
+#: .\companies\views\company_views.py:85
 #, python-brace-format
 msgid "User {user.username} has been removed from the company."
 msgstr ""
 
-#: .\companies\views.py:91
-msgid "Owner cannot leave the company."
+#: .\companies\views\company_views.py:99
+msgid "You have left the company."
 msgstr ""
 
-#: .\companies\views.py:95
-msgid "You have left the company."
+#: .\companies\views\company_views.py:111
+msgid "User not in company members."
+msgstr ""
+
+#: .\companies\views\company_views.py:114
+#, python-brace-format
+msgid "{user.username} is now an admin."
+msgstr ""
+
+#: .\companies\views\company_views.py:124
+msgid "User is not an admin."
+msgstr ""
+
+#: .\companies\views\company_views.py:127
+#, python-brace-format
+msgid "{user.username} is no longer an admin."
 msgstr ""

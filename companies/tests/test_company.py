@@ -23,7 +23,9 @@ class CompanyViewSetTestCase(APITestCase):
 
     def test_create_company(self):
         data = {
-            'name': 'New Company'
+            'name': 'New Company',
+            'description': 'New description',
+            'is_visible': True
         }
         self.client.force_authenticate(user=self.user)
         response = self.client.post(reverse('company-list'), data)
@@ -82,4 +84,48 @@ class CompanyViewSetTestCase(APITestCase):
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotIn(self.another_user, self.company.members.all())
+        self.client.force_authenticate(user=None)
+
+    def test_appoint_admin(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse('company-appoint-admin', kwargs={'pk': self.company.pk})
+        response = self.client.post(url, {'user_id': self.another_user.id})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn(self.another_user, self.company.admins.all())
+        self.client.force_authenticate(user=None)
+
+    def test_remove_admin(self):
+        self.client.force_authenticate(user=self.user)
+        self.company.admins.add(self.another_user)
+        url = reverse('company-remove-admin', kwargs={'pk': self.company.pk})
+        response = self.client.post(url, {'user_id': self.another_user.id})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotIn(self.another_user, self.company.admins.all())
+        self.client.force_authenticate(user=None)
+
+    def test_list_admins(self):
+        self.client.force_authenticate(user=self.user)
+        self.company.admins.add(self.another_user)
+        url = reverse('company-list-admins', kwargs={'pk': self.company.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], self.another_user.id)
+        self.client.force_authenticate(user=None)
+
+    def test_appoint_admin_non_owner(self):
+        self.client.force_authenticate(user=self.non_member_user)
+        url = reverse('company-appoint-admin', kwargs={'pk': self.company.pk})
+        response = self.client.post(url, {'user_id': self.another_user.id})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertNotIn(self.another_user, self.company.admins.all())
+        self.client.force_authenticate(user=None)
+
+    def test_remove_admin_non_owner(self):
+        self.client.force_authenticate(user=self.non_member_user)
+        self.company.admins.add(self.another_user)
+        url = reverse('company-remove-admin', kwargs={'pk': self.company.pk})
+        response = self.client.post(url, {'user_id': self.another_user.id})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn(self.another_user, self.company.admins.all())
         self.client.force_authenticate(user=None)
