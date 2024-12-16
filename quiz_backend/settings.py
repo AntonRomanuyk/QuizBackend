@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "quiz_users.apps.QuizUsersConfig",
     "companies.apps.CompaniesConfig",
+    "quizzes.apps.QuizzesConfig",
     "djoser",
     "rest_framework",
     "django_filters",
