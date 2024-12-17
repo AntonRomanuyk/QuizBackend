@@ -35,13 +35,6 @@ class QuizSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         questions_data = validated_data.pop('questions')
         quiz = Quiz.objects.create(**validated_data)
-        # for question_data in questions_data:
-        #     serializer = QuestionSerializer(data=question_data)
-        #     serializer.is_valid(raise_exception=True)
-        #     serializer.save(quiz=quiz)
-        # questions = [
-        #     Question(quiz=quiz, **questions_data) for question_data in questions_data
-        # ]
         questions = []
         for question_data in questions_data:
             serializer = QuestionSerializer(data=question_data)
@@ -58,8 +51,6 @@ class QuizSerializer(serializers.ModelSerializer):
         if questions_data is not None:
             instance.quiz_questions.all().delete()
 
-            # for question_data in questions_data:
-            #     Question.objects.create(quiz=instance, **question_data)
             questions = []
             for question_data in questions_data:
                 questions.append(Question(quiz=instance, **question_data))
