@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-14 04:20+0200\n"
+"POT-Creation-Date: 2024-12-16 06:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: .\companies\views\company_invitation_views.py:31
 #: .\companies\views\company_request_views.py:32
-#: .\companies\views\company_views.py:43
+#: .\companies\views\company_views.py:42
 #, python-format
 msgid "Failed to determine serializer: %s"
 msgstr "Не вдалося визначити серіалізатор: %s"
@@ -105,59 +105,71 @@ msgstr "Можна скасувати лише запити, що знаходя
 msgid "Request canceled successfully."
 msgstr "Запит успішно скасовано."
 
-#: .\companies\views\company_views.py:34
+#: .\companies\views\company_views.py:33
 #, python-format
 msgid "Failed to retrieve the company list: %s"
 msgstr "Не вдалося отримати список компаній: %s"
 
-#: .\companies\views\company_views.py:51
+#: .\companies\views\company_views.py:50
 #, python-format
 msgid "Failed to create company: %s"
 msgstr "Не вдалося створити компанію: %s"
 
-#: .\companies\views\company_views.py:72
+#: .\companies\views\company_views.py:71
 msgid "User ID is required."
 msgstr "Необхідний ідентифікатор користувача."
 
-#: .\companies\views\company_views.py:75
+#: .\companies\views\company_views.py:74
 msgid "User is not a member of this company."
 msgstr "Користувач не є членом цієї компанії."
 
-#: .\companies\views\company_views.py:80 .\companies\views\company_views.py:96
+#: .\companies\views\company_views.py:79 .\companies\views\company_views.py:95
 #, fuzzy
 #| msgid "You can only delete your own companies."
 msgid "You cannot remove the owner from the company."
 msgstr "Ви не можете видалити власника з компанії."
 
-#: .\companies\views\company_views.py:85
+#: .\companies\views\company_views.py:84
 #, python-brace-format
 msgid "User {user.username} has been removed from the company."
 msgstr "Користувач {user.username} був видалений з компанії."
 
-#: .\companies\views\company_views.py:99
+#: .\companies\views\company_views.py:98
 msgid "You have left the company."
 msgstr "Ви покинули компанію."
 
-#: .\companies\views\company_views.py:111
+#: .\companies\views\company_views.py:110
 msgid "User not in company members."
 msgstr "Користувач не є членом компанії."
 
-#: .\companies\views\company_views.py:114
+#: .\companies\views\company_views.py:113
 #, python-brace-format
 msgid "{user.username} is now an admin."
 msgstr "{user.username} тепер є адміністратором."
 
-#: .\companies\views\company_views.py:124
+#: .\companies\views\company_views.py:123
 #, fuzzy
 #| msgid "User is not a member of this company."
 msgid "User is not an admin."
 msgstr "Користувач не є членом цієї компанії."
 
-#: .\companies\views\company_views.py:127
+#: .\companies\views\company_views.py:126
 #, fuzzy, python-brace-format
 #| msgid "User {user.username} has been removed from the company."
 msgid "{user.username} is no longer an admin."
 msgstr "Користувач {user.username} був видалений з компанії."
+
+#: .\quizzes\serializers.py:12
+msgid "Each question must have at least two answer options."
+msgstr "У питанні має бути хочаб 2 варіанти відповіді"
+
+#: .\quizzes\serializers.py:15
+msgid "The correct answer must be one of the answer options."
+msgstr "Правильна відповідь має бути одним із варіантів відповіді."
+
+#: .\quizzes\serializers.py:29
+msgid "A quiz must have at least two questions."
+msgstr "У квізі має бути хочаб 2 питання"
 
 #~ msgid "Owner cannot leave the company."
 #~ msgstr "Власник не може залишити компанію."

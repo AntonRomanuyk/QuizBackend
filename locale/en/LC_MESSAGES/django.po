@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-14 04:20+0200\n"
+"POT-Creation-Date: 2024-12-16 06:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: .\companies\views\company_invitation_views.py:31
 #: .\companies\views\company_request_views.py:32
-#: .\companies\views\company_views.py:43
+#: .\companies\views\company_views.py:42
 #, python-format
 msgid "Failed to determine serializer: %s"
 msgstr ""
@@ -102,51 +102,63 @@ msgstr ""
 msgid "Request canceled successfully."
 msgstr ""
 
-#: .\companies\views\company_views.py:34
+#: .\companies\views\company_views.py:33
 #, python-format
 msgid "Failed to retrieve the company list: %s"
 msgstr ""
 
-#: .\companies\views\company_views.py:51
+#: .\companies\views\company_views.py:50
 #, python-format
 msgid "Failed to create company: %s"
 msgstr ""
 
-#: .\companies\views\company_views.py:72
+#: .\companies\views\company_views.py:71
 msgid "User ID is required."
 msgstr ""
 
-#: .\companies\views\company_views.py:75
+#: .\companies\views\company_views.py:74
 msgid "User is not a member of this company."
 msgstr ""
 
-#: .\companies\views\company_views.py:80 .\companies\views\company_views.py:96
+#: .\companies\views\company_views.py:79 .\companies\views\company_views.py:95
 msgid "You cannot remove the owner from the company."
 msgstr ""
 
-#: .\companies\views\company_views.py:85
+#: .\companies\views\company_views.py:84
 #, python-brace-format
 msgid "User {user.username} has been removed from the company."
 msgstr ""
 
-#: .\companies\views\company_views.py:99
+#: .\companies\views\company_views.py:98
 msgid "You have left the company."
 msgstr ""
 
-#: .\companies\views\company_views.py:111
+#: .\companies\views\company_views.py:110
 msgid "User not in company members."
 msgstr ""
 
-#: .\companies\views\company_views.py:114
+#: .\companies\views\company_views.py:113
 #, python-brace-format
 msgid "{user.username} is now an admin."
 msgstr ""
 
-#: .\companies\views\company_views.py:124
+#: .\companies\views\company_views.py:123
 msgid "User is not an admin."
 msgstr ""
 
-#: .\companies\views\company_views.py:127
+#: .\companies\views\company_views.py:126
 #, python-brace-format
 msgid "{user.username} is no longer an admin."
+msgstr ""
+
+#: .\quizzes\serializers.py:12
+msgid "Each question must have at least two answer options."
+msgstr ""
+
+#: .\quizzes\serializers.py:15
+msgid "The correct answer must be one of the answer options."
+msgstr ""
+
+#: .\quizzes\serializers.py:29
+msgid "A quiz must have at least two questions."
 msgstr ""

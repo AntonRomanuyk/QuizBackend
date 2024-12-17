@@ -44,3 +44,13 @@ class IsNotCompanyOwner(permissions.BasePermission):
             if obj.company.owner == request.user:
                 return False
         return True
+
+class IsCompanyAdminOrOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if hasattr(obj, 'company'):
+            if obj.company.admins.filter(pk=request.user.pk).exists():
+                return True
+        if hasattr(obj, 'admins'):
+            if obj.admins.filter(pk=request.user.pk).exists():
+                return True
+        return IsOwnerOrReadOnly().has_object_permission(request, view, obj)
