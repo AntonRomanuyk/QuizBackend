@@ -11,11 +11,9 @@ from .serializers import QuizSerializer
 
 # Create your views here.
 class QuizViewSet(viewsets.ModelViewSet):
-    queryset = Quiz.objects.all()
+    queryset = Quiz.objects.all().prefetch_related('quiz_questions')
     serializer_class = QuizSerializer
     permission_classes = [permissions.IsAuthenticated, IsCompanyAdminOrOwner]
-
-
 
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def company_quizzes(self, request, company_pk=None):
