@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 from core.models import TimeStampedModel
@@ -30,3 +31,13 @@ class Question(TimeStampedModel):
     def __str__(self):
         return f"Question: {self.text} (Quiz: {self.quiz.title})"
 
+class TestResult(TimeStampedModel):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='test_results_user')
+    company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, related_name='test_results_company')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='test_results_quiz')
+    score = models.FloatField()
+    total_questions = models.PositiveIntegerField()
+    correct_answers = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"User: {self.user.username} (Quiz: {self.quiz.title} by {self.company.name})"

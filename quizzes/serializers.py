@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from .models import Question
 from .models import Quiz
+from .models import TestResult
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -58,3 +59,56 @@ class QuizSerializer(serializers.ModelSerializer):
             Question.objects.bulk_create(questions)
 
         return instance
+
+
+class TestResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestResult
+        fields = ['id', 'user', 'company', 'quiz', 'score', 'total_questions',
+                  'correct_answers', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+class QuizAttemptSerializer(serializers.Serializer):
+    quiz_id = serializers.IntegerField()
+    answers = serializers.ListField(
+        child=serializers.JSONField(),
+    )
+
+    def validate(self, data):
+        quiz_id = data['quiz_id']
+        answers = data['answers']
+        quiz = Quiz.objects.prefetch_related('quiz_questions').filter(id=quiz_id).first()
+        if not quiz:
+            raise serializers.ValidationError(_("Quiz does not exist."))
+
+
+        if len(answers) != quiz.quiz_questions.count():
+            raise serializers.ValidationError(_("All questions must be answered."))
+        return data
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        quiz = Quiz.objects.prefetch_related('quiz_questions').get(id=validated_data['quiz_id'])
+        company = quiz.company
+        questions = {question.id: question for question in quiz.quiz_questions.all()}
+        total_questions = len(validated_data['answers'])
+        correct_answers = 0
+
+        for answer in validated_data['answers']:
+            question = questions.get(answer['question_id'])
+            if not question:
+                raise serializers.ValidationError(_(f"Invalid question ID: {answer['question_id']}"))
+            if question.correct_answer == answer['selected_answer']:
+                correct_answers += 1
+
+        score = correct_answers / total_questions * 100
+
+        test_result = TestResult.objects.create(
+            user=user,
+            company=company,
+            quiz=quiz,
+            score=score,
+            total_questions=total_questions,
+            correct_answers=correct_answers
+        )
+        return test_result

@@ -1,4 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.urls import reverse
+from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework.test import APITestCase
 
@@ -6,6 +8,7 @@ from companies.models import Company
 
 from .models import Question
 from .models import Quiz
+from .models import TestResult
 from .serializers import QuizSerializer
 
 User = get_user_model()
@@ -29,6 +32,14 @@ class QuizTestCase(APITestCase):
             title="Sample Quiz",
             description="This is a sample description.",
             frequency_days=7
+        )
+
+        self.question1 = Question.objects.create(
+            quiz=self.quiz,
+            text="What is 2 + 2?",
+            options=[2, 4, 5],
+            correct_answer=4,
+            allow_multiple_answers=False
         )
 
         self.data = {
@@ -93,3 +104,50 @@ class QuizTestCase(APITestCase):
         serializer = QuizSerializer(data=invalid_data)
         self.assertFalse(serializer.is_valid())
         self.assertTrue("questions" in serializer.errors)
+
+    def test_quiz_attempt(self):
+
+        self.client.force_authenticate(user=self.user_owner)
+
+        question2 = Question.objects.create(
+            quiz=self.quiz,
+            text="Sample Question 2",
+            options=["Option 1", "Option 2", "Option 3"],
+            correct_answer=2,
+            allow_multiple_answers=False,
+        )
+
+        response = self.client.post(
+            reverse("quiz-attempt", args=[self.quiz.id]),
+            data={
+                "quiz_id": self.quiz.id,
+                "answers": [
+                    {"question_id": self.question1.id, "selected_answer": self.question1.correct_answer},
+                    {"question_id": question2.id, "selected_answer": 0},
+                ],
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertIn("score", response.data)
+        self.assertEqual(response.data["score"], 50.0)
+        self.client.force_authenticate(user=None)
+
+
+    def test_analytics(self):
+        self.client.force_authenticate(self.user_owner)
+
+        TestResult.objects.create(user=self.user_owner, company=self.company, quiz=self.quiz,
+                                  total_questions=10, correct_answers=7, score=70.0)
+        TestResult.objects.create(user=self.user_owner, company=self.company, quiz=self.quiz,
+                                  total_questions=5, correct_answers=3, score=60.0)
+
+        response = self.client.get(reverse('quiz-analytics'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('average_score', response.data)
+        self.assertEqual(response.data['total_tests'], 2)
+        self.assertEqual(response.data['total_questions'], 15)
+        self.assertEqual(response.data['correct_answers'], 10)
+        self.assertAlmostEqual(response.data['average_score'], 6.67, places=2)
