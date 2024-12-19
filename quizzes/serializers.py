@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from .models import Question
 from .models import Quiz
-from .models import TestResult
+from .models import QuizResult
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -61,11 +61,11 @@ class QuizSerializer(serializers.ModelSerializer):
         return instance
 
 
-class TestResultSerializer(serializers.ModelSerializer):
+class QuizResultSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TestResult
+        model = QuizResult
         fields = ['id', 'user', 'company', 'quiz', 'score', 'total_questions',
-                  'correct_answers', 'created_at', 'updated_at']
+                  'correct_answers', 'status', 'created_at', 'updated_at']
         read_only_fields = ['created_at', 'updated_at']
 
 class QuizAttemptSerializer(serializers.Serializer):
@@ -81,9 +81,13 @@ class QuizAttemptSerializer(serializers.Serializer):
         if not quiz:
             raise serializers.ValidationError(_("Quiz does not exist."))
 
-
-        if len(answers) != quiz.quiz_questions.count():
-            raise serializers.ValidationError(_("All questions must be answered."))
+        expected_question_count = quiz.quiz_questions.count()
+        if len(answers) != expected_question_count:
+            raise serializers.ValidationError(_("All questions must be answered. "
+                                                "Expected: %(expected)s, Received: %(received)s.") % {
+                    "expected": expected_question_count,
+                    "received": len(answers)
+                })
         return data
 
     def create(self, validated_data):
@@ -91,24 +95,28 @@ class QuizAttemptSerializer(serializers.Serializer):
         quiz = Quiz.objects.prefetch_related('quiz_questions').get(id=validated_data['quiz_id'])
         company = quiz.company
         questions = {question.id: question for question in quiz.quiz_questions.all()}
-        total_questions = len(validated_data['answers'])
+        total_questions = len(questions)
         correct_answers = 0
 
         for answer in validated_data['answers']:
-            question = questions.get(answer['question_id'])
+            question_id = answer['question_id']
+            selected_answer = answer['selected_answer']
+
+            question = questions.get(question_id)
             if not question:
-                raise serializers.ValidationError(_(f"Invalid question ID: {answer['question_id']}"))
-            if question.correct_answer == answer['selected_answer']:
+                raise serializers.ValidationError(_(f"Invalid question ID: {question_id}"))
+            if question.correct_answer == selected_answer:
                 correct_answers += 1
 
         score = correct_answers / total_questions * 100
 
-        test_result = TestResult.objects.create(
+        quiz_result = QuizResult.objects.create(
             user=user,
             company=company,
             quiz=quiz,
             score=score,
             total_questions=total_questions,
-            correct_answers=correct_answers
+            correct_answers=correct_answers,
+            status = 'completed'
         )
-        return test_result
+        return quiz_result

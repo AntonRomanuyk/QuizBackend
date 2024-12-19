@@ -8,7 +8,7 @@ from companies.models import Company
 
 from .models import Question
 from .models import Quiz
-from .models import TestResult
+from .models import QuizResult
 from .serializers import QuizSerializer
 
 User = get_user_model()
@@ -135,19 +135,60 @@ class QuizTestCase(APITestCase):
         self.assertEqual(response.data["score"], 50.0)
         self.client.force_authenticate(user=None)
 
+    def test_company_average_score(self):
+        self.client.force_authenticate(user=self.user_owner)
 
-    def test_analytics(self):
-        self.client.force_authenticate(self.user_owner)
+        QuizResult.objects.create(
+            user=self.user_owner,
+            company=self.company,
+            quiz=self.quiz,
+            total_questions=10,
+            correct_answers=7,
+            score=70.0,
+            status='completed'
+        )
 
-        TestResult.objects.create(user=self.user_owner, company=self.company, quiz=self.quiz,
-                                  total_questions=10, correct_answers=7, score=70.0)
-        TestResult.objects.create(user=self.user_owner, company=self.company, quiz=self.quiz,
-                                  total_questions=5, correct_answers=3, score=60.0)
+        url = reverse('quiz-company-average-score', args=[self.company.id])
+        response = self.client.get(url)
 
-        response = self.client.get(reverse('quiz-analytics'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('average_score', response.data)
-        self.assertEqual(response.data['total_tests'], 2)
+        self.assertEqual(response.data['company_id'], str(self.company.id))
+        self.assertEqual(response.data['total_questions'], 10)
+        self.assertEqual(response.data['correct_answers'], 7)
+        self.assertAlmostEqual(response.data['average_score'], 7.0, places=1)
+
+        self.client.force_authenticate(user=None)
+
+    def test_system_average_score(self):
+        self.client.force_authenticate(user=self.user_owner)
+
+        QuizResult.objects.create(
+            user=self.user_owner,
+            company=self.company,
+            quiz=self.quiz,
+            total_questions=10,
+            correct_answers=7,
+            score=70.0,
+            status='completed'
+        )
+        another_company = Company.objects.create(name="Another Company", owner=self.user_owner)
+        another_quiz = Quiz.objects.create(company=another_company, title="Another Quiz", frequency_days=7)
+        QuizResult.objects.create(
+            user=self.user_owner,
+            company=another_company,
+            quiz=another_quiz,
+            total_questions=5,
+            correct_answers=3,
+            score=60.0,
+            status='completed'
+        )
+
+        url = reverse('quiz-system-average-score')
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['total_questions'], 15)
         self.assertEqual(response.data['correct_answers'], 10)
         self.assertAlmostEqual(response.data['average_score'], 6.67, places=2)
+
+        self.client.force_authenticate(user=None)

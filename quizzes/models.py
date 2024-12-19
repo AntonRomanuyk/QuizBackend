@@ -31,13 +31,18 @@ class Question(TimeStampedModel):
     def __str__(self):
         return f"Question: {self.text} (Quiz: {self.quiz.title})"
 
-class TestResult(TimeStampedModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='test_results_user')
-    company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, related_name='test_results_company')
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='test_results_quiz')
-    score = models.FloatField()
-    total_questions = models.PositiveIntegerField()
-    correct_answers = models.PositiveIntegerField()
+class QuizResult(TimeStampedModel):
+    STATUS_CHOICES = [
+        ('started', 'Started'),
+        ('completed', 'Completed'),
+    ]
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='quiz_results_user')
+    company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, related_name='quiz_results_company')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='quiz_results')
+    score = models.FloatField(null=True, blank=True)
+    total_questions = models.PositiveIntegerField(null=True, blank=True)
+    correct_answers = models.PositiveIntegerField(null=True, blank=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='started')
 
     def __str__(self):
         return f"User: {self.user.username} (Quiz: {self.quiz.title} by {self.company.name})"

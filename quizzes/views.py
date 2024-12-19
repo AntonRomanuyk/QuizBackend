@@ -8,11 +8,11 @@ from rest_framework.response import Response
 from companies.permissions import IsCompanyAdminOrOwner
 
 from .models import Quiz
-from .models import TestResult
+from .models import QuizResult
 from .paginations import QuizPagination
 from .serializers import QuizAttemptSerializer
+from .serializers import QuizResultSerializer
 from .serializers import QuizSerializer
-from .serializers import TestResultSerializer
 
 
 # Create your views here.
@@ -33,22 +33,46 @@ class QuizViewSet(viewsets.ModelViewSet):
         serializer = QuizAttemptSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         test_result = serializer.save()
-        return Response(TestResultSerializer(test_result).data, status=status.HTTP_201_CREATED)
+        return Response(QuizResultSerializer(test_result).data, status=status.HTTP_201_CREATED)
 
-    @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
-    def analytics(self, request):
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def company_average_score(self, request, pk=None):
         user = request.user
-        test_results = TestResult.objects.filter(user=user).aggregate(
-        total_questions=Sum('total_questions'),
-        correct_answers=Sum('correct_answers'),
-    )
-        total_questions = test_results['total_questions']
-        correct_answers = test_results['correct_answers'] or 0
-        average_score = correct_answers / total_questions * 10
+        company_id = pk
+
+        test_results = QuizResult.objects.filter(user=user, company_id=company_id).aggregate(
+            total_correct=Sum('correct_answers'),
+            total_questions=Sum('total_questions')
+        )
+
+        total_questions = test_results['total_questions'] or 0
+        total_correct = test_results['total_correct'] or 0
+
+        average_score = (total_correct / total_questions * 10) if total_questions > 0 else 0
 
         return Response({
-            'total_tests': TestResult.objects.filter(user=user).count(),
+            'company_id': company_id,
             'total_questions': total_questions,
-            'correct_answers': correct_answers,
+            'correct_answers': total_correct,
+            'average_score': round(average_score, 2)
+        })
+
+    @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def system_average_score(self, request):
+        user = request.user
+
+        test_results = QuizResult.objects.filter(user=user).aggregate(
+            total_correct=Sum('correct_answers'),
+            total_questions=Sum('total_questions')
+        )
+
+        total_questions = test_results['total_questions'] or 0
+        total_correct = test_results['total_correct'] or 0
+
+        average_score = (total_correct / total_questions * 10) if total_questions > 0 else 0
+
+        return Response({
+            'total_questions': total_questions,
+            'correct_answers': total_correct,
             'average_score': round(average_score, 2)
         })
