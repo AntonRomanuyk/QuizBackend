@@ -1,6 +1,7 @@
 from django.utils.translation import gettext as _
 from rest_framework import serializers
 
+from .models import STATUS_CHOICES
 from .models import Question
 from .models import Quiz
 from .models import QuizResult
@@ -117,6 +118,6 @@ class QuizAttemptSerializer(serializers.Serializer):
             score=score,
             total_questions=total_questions,
             correct_answers=correct_answers,
-            status = 'completed'
+            status = STATUS_CHOICES.STATUS_COMPLETED
         )
         return quiz_result

@@ -106,8 +106,10 @@ class QuizTestCase(APITestCase):
         self.assertTrue("questions" in serializer.errors)
 
     def test_quiz_attempt(self):
+        quiz = self.quiz
+        user = self.user_owner
 
-        self.client.force_authenticate(user=self.user_owner)
+        self.client.force_authenticate(user=user)
 
         question2 = Question.objects.create(
             quiz=self.quiz,
@@ -131,8 +133,34 @@ class QuizTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+        created_result = QuizResult.objects.get(user=user, quiz=quiz)
+        self.assertEqual(created_result.user, user)
+        self.assertEqual(created_result.company, quiz.company)
+        self.assertEqual(created_result.total_questions, quiz.quiz_questions.count())
         self.assertIn("score", response.data)
         self.assertEqual(response.data["score"], 50.0)
+        self.client.force_authenticate(user=None)
+
+    def test_quiz_attempt_with_incorrect_answers_(self):
+
+        self.client.force_authenticate(user=self.user_owner)
+
+
+        response = self.client.post(
+            reverse("quiz-attempt", args=[self.quiz.id]),
+            data={
+                "quiz_id": self.quiz.id,
+                "answers": [
+                    {"question_id": self.question1.id, "selected_answer": self.question1.correct_answer},
+
+                ],
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
         self.client.force_authenticate(user=None)
 
     def test_company_average_score(self):
@@ -183,7 +211,7 @@ class QuizTestCase(APITestCase):
             status='completed'
         )
 
-        url = reverse('quiz-system-average-score')
+        url = reverse('quiz-overall-average-score')
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

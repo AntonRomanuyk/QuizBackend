@@ -58,7 +58,7 @@ class QuizViewSet(viewsets.ModelViewSet):
         })
 
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
-    def system_average_score(self, request):
+    def overall_average_score(self, request):
         user = request.user
 
         test_results = QuizResult.objects.filter(user=user).aggregate(
