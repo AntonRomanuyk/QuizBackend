@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from .models import Question
 from .models import Quiz
+from .models import QuizResult
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -58,3 +59,80 @@ class QuizSerializer(serializers.ModelSerializer):
             Question.objects.bulk_create(questions)
 
         return instance
+
+
+class QuizResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizResult
+        fields = ['id', 'user', 'company', 'quiz', 'score', 'total_questions',
+                  'correct_answers', 'status', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+class QuizAttemptSerializer(serializers.Serializer):
+    quiz_id = serializers.IntegerField()
+    answers = serializers.ListField(
+        child=serializers.JSONField(),
+    )
+
+    def validate(self, data):
+        quiz_id = data['quiz_id']
+        answers = data['answers']
+        quiz = Quiz.objects.prefetch_related('quiz_questions').filter(id=quiz_id).first()
+        if not quiz:
+            raise serializers.ValidationError(_("Quiz does not exist."))
+
+        expected_question_count = quiz.quiz_questions.count()
+        if len(answers) != expected_question_count:
+            raise serializers.ValidationError(_("All questions must be answered. "
+                                                "Expected: %(expected)s, Received: %(received)s.") % {
+                    "expected": expected_question_count,
+                    "received": len(answers)
+                })
+        return data
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        quiz = Quiz.objects.prefetch_related('quiz_questions').select_related(
+            'company').get(id=validated_data['quiz_id'])
+        company = quiz.company
+        questions = {question.id: question for question in quiz.quiz_questions.all()}
+        total_questions = len(questions)
+        correct_answers = 0
+
+        for answer in validated_data['answers']:
+            question_id = answer['question_id']
+            selected_answer = answer['selected_answer']
+
+            question = questions.get(question_id)
+            if not question:
+                raise serializers.ValidationError(_(f"Invalid question ID: {question_id}"))
+            if question.correct_answer == selected_answer:
+                correct_answers += 1
+
+        score = correct_answers / total_questions * 100
+
+        quiz_result = QuizResult.objects.create(
+            user=user,
+            company=company,
+            quiz=quiz,
+            score=score,
+            total_questions=total_questions,
+            correct_answers=correct_answers,
+            status = QuizResult.StatusChoices.COMPLETED
+        )
+        return quiz_result
+
+class AverageScoreSerializer(serializers.Serializer):
+    total_questions = serializers.IntegerField()
+    correct_answers = serializers.IntegerField()
+    average_score = serializers.SerializerMethodField()
+    company_id = serializers.IntegerField(required=False)
+
+    def get_average_score(self, obj):
+        total_questions = obj.get('total_questions', 0) or 0
+        total_correct = obj.get('correct_answers', 0) or 0
+
+        if total_questions == 0:
+            return 0.0
+
+        return round((total_correct / total_questions) * 10, 2)

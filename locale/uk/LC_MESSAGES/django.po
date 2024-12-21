@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 06:08+0200\n"
+"POT-Creation-Date: 2024-12-18 08:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -159,17 +159,29 @@ msgstr "Користувач не є членом цієї компанії."
 msgid "{user.username} is no longer an admin."
 msgstr "Користувач {user.username} був видалений з компанії."
 
-#: .\quizzes\serializers.py:12
-msgid "Each question must have at least two answer options."
-msgstr "У питанні має бути хочаб 2 варіанти відповіді"
-
 #: .\quizzes\serializers.py:15
+msgid "Each question must have at least two answer options."
+msgstr "У питанні має бути хочаб 2 варіанти відповіді."
+
+#: .\quizzes\serializers.py:18
 msgid "The correct answer must be one of the answer options."
 msgstr "Правильна відповідь має бути одним із варіантів відповіді."
 
-#: .\quizzes\serializers.py:29
+#: .\quizzes\serializers.py:32
 msgid "A quiz must have at least two questions."
-msgstr "У квізі має бути хочаб 2 питання"
+msgstr "У квізі має бути хочаб 2 питання."
+
+#: .\quizzes\serializers.py:80
+msgid "Quiz does not exist."
+msgstr "Квізу не існує."
+
+#: .\quizzes\serializers.py:84
+msgid "All questions must be answered."
+msgstr "Не на всіх питаннях обранна відповідь."
+
+#: .\quizzes\serializers.py:98
+msgid "Invalid question ID: {answer['question_id']}"
+msgstr "Невірний ID питання: {answer['question_id']}."
 
 #~ msgid "Owner cannot leave the company."
 #~ msgstr "Власник не може залишити компанію."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 06:08+0200\n"
+"POT-Creation-Date: 2024-12-18 08:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -151,14 +151,26 @@ msgstr ""
 msgid "{user.username} is no longer an admin."
 msgstr ""
 
-#: .\quizzes\serializers.py:12
+#: .\quizzes\serializers.py:15
 msgid "Each question must have at least two answer options."
 msgstr ""
 
-#: .\quizzes\serializers.py:15
+#: .\quizzes\serializers.py:18
 msgid "The correct answer must be one of the answer options."
 msgstr ""
 
-#: .\quizzes\serializers.py:29
+#: .\quizzes\serializers.py:32
 msgid "A quiz must have at least two questions."
+msgstr ""
+
+#: .\quizzes\serializers.py:80
+msgid "Quiz does not exist."
+msgstr ""
+
+#: .\quizzes\serializers.py:84
+msgid "All questions must be answered."
+msgstr ""
+
+#: .\quizzes\serializers.py:98
+msgid "Invalid question ID: {answer['question_id']}"
 msgstr ""
