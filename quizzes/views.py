@@ -10,6 +10,7 @@ from companies.permissions import IsCompanyAdminOrOwner
 from .models import Quiz
 from .models import QuizResult
 from .paginations import QuizPagination
+from .serializers import AverageScoreSerializer
 from .serializers import QuizAttemptSerializer
 from .serializers import QuizResultSerializer
 from .serializers import QuizSerializer
@@ -45,17 +46,16 @@ class QuizViewSet(viewsets.ModelViewSet):
             total_questions=Sum('total_questions')
         )
 
-        total_questions = test_results['total_questions'] or 0
-        total_correct = test_results['total_correct'] or 0
 
-        average_score = (total_correct / total_questions * 10) if total_questions > 0 else 0
-
-        return Response({
+        data = {
             'company_id': company_id,
-            'total_questions': total_questions,
-            'correct_answers': total_correct,
-            'average_score': round(average_score, 2)
-        })
+            'total_questions': test_results['total_questions'],
+            'correct_answers': test_results['total_correct'],
+        }
+        serializer = AverageScoreSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data)
 
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def overall_average_score(self, request):
@@ -66,13 +66,11 @@ class QuizViewSet(viewsets.ModelViewSet):
             total_questions=Sum('total_questions')
         )
 
-        total_questions = test_results['total_questions'] or 0
-        total_correct = test_results['total_correct'] or 0
+        data = {
+            'total_questions': test_results['total_questions'],
+            'correct_answers': test_results['total_correct'],
+        }
+        serializer = AverageScoreSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
 
-        average_score = (total_correct / total_questions * 10) if total_questions > 0 else 0
-
-        return Response({
-            'total_questions': total_questions,
-            'correct_answers': total_correct,
-            'average_score': round(average_score, 2)
-        })
+        return Response(serializer.data)

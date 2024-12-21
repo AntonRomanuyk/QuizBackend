@@ -31,22 +31,19 @@ class Question(TimeStampedModel):
     def __str__(self):
         return f"Question: {self.text} (Quiz: {self.quiz.title})"
 
-STATUS_STARTED = 'started'
-STATUS_COMPLETED = 'completed'
-STATUS_CHOICES = [
-    (STATUS_STARTED, 'Started'),
-    (STATUS_COMPLETED, 'Completed'),
-]
 
 class QuizResult(TimeStampedModel):
+    class StatusChoices(models.TextChoices):
+        STARTED = 'started', 'Started'
+        COMPLETED = 'completed', 'Completed'
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='quiz_results_user')
-    company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, related_name='quiz_results_company')
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='quiz_results')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='quizzes')
+    company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, related_name='quiz_results')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='results')
     score = models.FloatField(null=True, blank=True)
     total_questions = models.PositiveIntegerField(null=True, blank=True)
     correct_answers = models.PositiveIntegerField(null=True, blank=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_STARTED)
+    status = models.CharField(max_length=10, choices=StatusChoices.choices, default=StatusChoices.STARTED)
 
     def __str__(self):
         return f"User: {self.user.username} (Quiz: {self.quiz.title} by {self.company.name})"

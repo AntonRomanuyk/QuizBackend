@@ -1,7 +1,6 @@
 from django.utils.translation import gettext as _
 from rest_framework import serializers
 
-from .models import STATUS_CHOICES
 from .models import Question
 from .models import Quiz
 from .models import QuizResult
@@ -93,7 +92,8 @@ class QuizAttemptSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         user = self.context['request'].user
-        quiz = Quiz.objects.prefetch_related('quiz_questions').get(id=validated_data['quiz_id'])
+        quiz = Quiz.objects.prefetch_related('quiz_questions').select_related(
+            'company').get(id=validated_data['quiz_id'])
         company = quiz.company
         questions = {question.id: question for question in quiz.quiz_questions.all()}
         total_questions = len(questions)
@@ -118,6 +118,21 @@ class QuizAttemptSerializer(serializers.Serializer):
             score=score,
             total_questions=total_questions,
             correct_answers=correct_answers,
-            status = STATUS_CHOICES.STATUS_COMPLETED
+            status = QuizResult.StatusChoices.COMPLETED
         )
         return quiz_result
+
+class AverageScoreSerializer(serializers.Serializer):
+    total_questions = serializers.IntegerField()
+    correct_answers = serializers.IntegerField()
+    average_score = serializers.SerializerMethodField()
+    company_id = serializers.IntegerField(required=False)
+
+    def get_average_score(self, obj):
+        total_questions = obj.get('total_questions', 0) or 0
+        total_correct = obj.get('correct_answers', 0) or 0
+
+        if total_questions == 0:
+            return 0.0
+
+        return round((total_correct / total_questions) * 10, 2)

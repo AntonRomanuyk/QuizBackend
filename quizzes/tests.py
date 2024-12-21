@@ -141,10 +141,17 @@ class QuizTestCase(APITestCase):
         self.assertEqual(response.data["score"], 50.0)
         self.client.force_authenticate(user=None)
 
-    def test_quiz_attempt_with_incorrect_answers_(self):
+    def test_quiz_attempt_with_incorrect_answers(self):
 
         self.client.force_authenticate(user=self.user_owner)
 
+        Question.objects.create(
+            quiz=self.quiz,
+            text="Sample Question 2",
+            options=["Option 1", "Option 2", "Option 3"],
+            correct_answer=2,
+            allow_multiple_answers=False,
+        )
 
         response = self.client.post(
             reverse("quiz-attempt", args=[self.quiz.id]),
@@ -180,7 +187,7 @@ class QuizTestCase(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['company_id'], str(self.company.id))
+        self.assertEqual(response.data['company_id'], self.company.id)
         self.assertEqual(response.data['total_questions'], 10)
         self.assertEqual(response.data['correct_answers'], 7)
         self.assertAlmostEqual(response.data['average_score'], 7.0, places=1)
